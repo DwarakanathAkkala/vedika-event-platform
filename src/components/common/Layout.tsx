@@ -1,7 +1,6 @@
 // src/components/common/Layout.tsx
 import React from 'react';
 import Header from './Header';
-import { Toaster } from 'react-hot-toast';
 
 interface LayoutProps {
     children: React.ReactNode;
