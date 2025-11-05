@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+/* src/index.css - FINAL, CLEAN GLOBAL CSS */
+
+/* CRITICAL: The only required Tailwind injection. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base styles for clean rendering */
+body {
+  /* Use Inter font - Assuming it's imported in index.html for a clean base */
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  @apply bg-gray-50;
+  /* A very light background */
+}
