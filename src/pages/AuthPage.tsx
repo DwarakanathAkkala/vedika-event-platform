@@ -1,12 +1,15 @@
-import React from 'react';
+// src/pages/AuthPage.tsx
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, type Variants } from 'framer-motion';
 import Button from '../components/ui/Button';
 import { signInWithGoogle } from '../services/authService';
 import { useAuthStore } from '../stores/useAuthStore';
-import AuthGif from '../assets/Authentication.gif';
+import AuthGif from '../assets/Authentication.gif'; // Assuming this import path is correct
 
-// Framer Motion Variants
+// ----------------------------------------------------------------------
+// FRAMER MOTION / VISUAL COMPONENTS
+// ----------------------------------------------------------------------
 const cardVariants: Variants = {
     hidden: { opacity: 0, scale: 0.9, y: 20 },
     visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
@@ -15,7 +18,6 @@ const cardVariants: Variants = {
 // Component for the GIF
 const AuthVisual: React.FC = () => (
     <div className="flex justify-center mb-6">
-        {/* Increased size from w-40 h-40 to w-48 h-48 */}
         <div className="w-48 h-48 rounded-full bg-white flex items-center justify-center shadow-xl border-4 border-indigo-200 overflow-hidden">
             <img
                 src={AuthGif}
@@ -26,22 +28,40 @@ const AuthVisual: React.FC = () => (
     </div>
 );
 
+
 const AuthPage: React.FC = () => {
     const { isAuthenticated, isLoading } = useAuthStore();
     const navigate = useNavigate();
+    const [isSigningIn, setIsSigningIn] = useState(false); // Local state for button click
 
-    // Redirect authenticated users from the auth page
-    if (isAuthenticated && !isLoading) {
-        navigate('/home', { replace: true });
-        return null;
-    }
+    // 1. CRITICAL FIX: Move navigation logic into useEffect
+    useEffect(() => {
+        if (isAuthenticated && !isLoading) {
+            // User is authenticated and loading check is done; redirect.
+            navigate('/home', { replace: true });
+        }
+    }, [isAuthenticated, isLoading, navigate]);
+
 
     const handleGoogleSignIn = async () => {
+        setIsSigningIn(true); // Start local button loading
         await signInWithGoogle();
+        // Local loading stops here, relying on the listener to handle the redirect
+        setIsSigningIn(false);
     };
 
     const buttonClass = "w-full text-lg py-3 rounded-xl transition-all duration-300 shadow-lg";
 
+    // If global isLoading is true (first load check), render a temporary status message
+    if (isLoading) {
+        return (
+            <div className="flex justify-center items-center min-h-[calc(100vh-4rem)] p-4">
+                <p className="text-xl font-semibold text-indigo-600 animate-pulse">Checking Authentication Status...</p>
+            </div>
+        )
+    }
+
+    // Now, isLoading is false. The component renders.
     return (
         <motion.div
             className="flex justify-center items-center min-h-[calc(100vh-4rem)] p-4"
@@ -50,13 +70,11 @@ const AuthPage: React.FC = () => {
             variants={cardVariants}
         >
             <motion.div
-                // Increased max-w-md to give the larger GIF room, kept border-t-8 for emphasis
                 className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-6 sm:p-8 border-t-8 border-indigo-600"
                 variants={cardVariants}
             >
-                <AuthVisual /> {/* VISUAL SECTION */}
+                <AuthVisual />
 
-                {/* Text Content */}
                 <h2 className="text-3xl font-black text-center text-gray-900 mb-1">
                     Start Your VEDIKA
                 </h2>
@@ -64,17 +82,13 @@ const AuthPage: React.FC = () => {
                     The fastest way to manage your event is here.
                 </p>
 
-                {/* 1. GOOGLE AUTH BUTTON */}
+                {/* 2. BUTTON LOGIC: Use local isSigningIn state for button visibility */}
                 <Button
                     onClick={handleGoogleSignIn}
-                    disabled={isLoading}
-                    className={`
-            ${buttonClass} 
-            bg-indigo-600 text-white hover:bg-indigo-700 
-            flex items-center justify-center space-x-3
-          `}
+                    disabled={isSigningIn}
+                    className={`${buttonClass} bg-indigo-600 text-white hover:bg-indigo-700 flex items-center justify-center space-x-3`}
                 >
-                    {isLoading ? (
+                    {isSigningIn ? (
                         <span className="animate-pulse">Loading...</span>
                     ) : (
                         <>

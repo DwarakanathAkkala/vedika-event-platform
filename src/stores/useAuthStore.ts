@@ -1,48 +1,44 @@
+// src/stores/useAuthStore.ts
 import { create } from 'zustand';
 import type { User } from '../types';
 
-// Define the shape of the state
 interface AuthState {
     user: User | null;
     isAuthenticated: boolean;
-    isLoading: boolean; // True while checking Firebase Auth status
+    isLoading: boolean;
     error: string | null;
 }
 
-// Define the actions
 interface AuthActions {
     setUser: (user: User | null) => void;
     setLoading: (isLoading: boolean) => void;
-    logout: () => void;
+    logout: () => void; // Final fix in this action
     setError: (error: string | null) => void;
 }
 
-// Combine State and Actions into the Store Interface
 type AuthStore = AuthState & AuthActions;
 
-// Initial state for the store
 const initialState: AuthState = {
     user: null,
     isAuthenticated: false,
-    isLoading: true, // Critical: Starts true to check auth status on app load
+    isLoading: true, // Start as true on initial app load
     error: null,
 };
 
 export const useAuthStore = create<AuthStore>((set) => ({
-    ...initialState, // Spread initial state
+    ...initialState,
 
-    // ACTIONS
     setUser: (user) =>
         set({
             user,
-            isAuthenticated: !!user, // True if user is not null
-            isLoading: false,
+            isAuthenticated: !!user,
+            isLoading: false, // Loading resolves here
             error: null,
         }),
 
     setLoading: (isLoading) => set({ isLoading }),
 
-    logout: () => set(initialState), // Reset to initial state upon logout
+    logout: () => set({ ...initialState, isLoading: false }),
 
     setError: (error) => set({ error, isLoading: false }),
 }));
