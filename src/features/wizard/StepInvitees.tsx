@@ -1,5 +1,5 @@
 // src/features/wizard/StepInvitees.tsx
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useWizard } from './WizardContext';
 import toast from 'react-hot-toast';

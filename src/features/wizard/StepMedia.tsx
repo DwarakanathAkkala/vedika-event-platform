@@ -41,7 +41,7 @@ const StepMedia: React.FC = () => {
             const fileName = `${eventData.id || `draft_${Date.now()}`}/${Date.now()}.${fileExtension}`;
 
             // 💥 SUPABASE UPLOAD LOGIC 💥
-            const { data, error } = await supabase.storage
+            const { error } = await supabase.storage
                 .from(STORAGE_BUCKET)
                 .upload(fileName, file);
 

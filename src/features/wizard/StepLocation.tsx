@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useWizard } from './WizardContext';
-import toast from 'react-hot-toast';
 
 const StepLocation: React.FC = () => {
     const { eventData, updateEventData } = useWizard();
