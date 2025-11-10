@@ -1,13 +1,14 @@
-// 1. AUTHENTICATION / USER TYPES (Essential for the next task)
+// src/types/index.ts
+
+// 1. AUTHENTICATION / USER TYPES
 export interface User {
     uid: string;
     email: string | null;
     displayName: string | null;
     photoURL: string | null;
-    // Metadata for the app
     isNewUser: boolean;
     hasCompletedOnboarding: boolean;
-    eventHistory: string[]; // Array of event IDs created or attended
+    eventHistory: string[];
 }
 
 // 2. EVENT TYPES
@@ -18,7 +19,7 @@ export interface Location {
     address: string;
     lat: number;
     lng: number;
-    placeId?: string; // Google Place ID (for Map Integration)
+    placeId?: string;
 }
 
 export interface Media {
@@ -30,17 +31,18 @@ export interface Media {
 
 export interface Event {
     id: string;
-    creatorId: string; // User.uid
+    creatorId: string;
     title: string;
     description: string;
-    startDate: string; // ISO 8601 string
-    endDate: string;   // ISO 8601 string
+    startDate: string;
+    endDate: string;
     location: Location;
     type: EventType;
     media: Media[];
+    invitees?: string[]; // 💥 NEW: Array of guest email addresses
     isDraft: boolean;
-    createdAt: number; // Timestamp
-    updatedAt: number; // Timestamp
+    createdAt: number;
+    updatedAt: number;
 }
 
 // 3. RSVP/ATTENDEE TYPES
